@@ -13,7 +13,7 @@
 @attribute "Reservation"	{yes,no}
 @attribute "Type"			{french,italian,thai,burger}
 @attribute "WaitEstimate"	{0-10,10-30,30-60,>60}
-@attribure "wait"			{yes,no}
+@attribute "wait"			{yes,no}
 
 @data
 
