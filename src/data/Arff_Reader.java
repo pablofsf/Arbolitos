@@ -36,7 +36,7 @@ public class Arff_Reader {
 	}
 	
 	public void print(){
-		System.out.println(this.examples);
+		System.out.println(this.examples.attribute(5).index());
 	}
 	
 	public void remove(){

@@ -1,7 +1,7 @@
 package tree;
 
-
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Random;
 
 import weka.core.Instances;
 import weka.core.Instance;
@@ -10,35 +10,52 @@ import weka.core.Attribute;
 
 public class TrainTree{
 
-    Tree DecisionTree(Instances examples, Attribute attributes,Instances parent){
+	//For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer/double
+	//that represents that represents a value for the attribute we are looking for.
+	//In the example wait.arff, the attribute that we are looking for is @attribute wait {yes,no}
+	//Then, returning 0 means wait = yes and returning 1 means wait = no
+	//Both the number or the string could be stored in the tree node, still make a decision
+    Tree DecisionTree(Instances examples, Instances parent){
 
-        if(examples.nummInstances() == 0){
-            return ProbabilityDecision(parent);//Arreglar
+        if(examples.numInstances() == 0){
+        	//This has to be transformed into a end node
+            return PluralityValue(parent);
         }
 
-        if(attributes == NULL){
-            return ProbabilityDecision(examples);//Arreglar
+        //If there is only 1 attribute, the it is the decision attribute. Makes no sense to do anything else
+        if(examples.numAttributes() == 1){
+        	//This has to be transformed into a end node
+            return PluralityValue(examples);
         }
 
-        for(int i = 0; i < examples.numInstances();i++) {
-            if (examples.attributeToDoubleArray(examples.numAtributes() - 1)[i] == examples.attributeToDoubleArray(examples.numAtributes() - 1)[i++];){
+        double[] decisionValues = examples.attributeToDoubleArray(examples.numAttributes() - 1);
+        for(int i = 0; i < examples.numInstances() - 2 ;i++) {
+            if (decisionValues[i] != decisionValues[i++]){
+            	break;
+            }
 
-            }else{break;}
-
-            if (i == examples.numInstances() - 1){
-
-                return examples.attributeToDoubleArray(examples.numAtributes() - 1);
+            if (i == examples.numInstances()){
+            	//This has to be transformed into a end node. The index is 0 but could be anything
+                return decisionValues[0];
             }
         }
+        
+        
+        Attribute chosenAttribute = Importance(examples);
 
-        Instances exs = new Instances;
-        for (int i = 0; i < attributes.numValues(); i++) {
-            for (int j = 0; i < examples.numInstances(); j++) {
-                if (i = examples.attributesToDoubleArray(attributes.index())[j]) {
-                    exs.add(examples.instance(j));
-                    right.DecisionTree(exs, atrributes - A, examples);
+        double[] attributeExampleValues = examples.attributeToDoubleArray(chosenAttribute.index());
+    	
+        for (int i = 0; i < chosenAttribute.numValues(); i++) {
+            Instances exs = new Instances(examples);
+
+            for (int j = 0; i < attributeExampleValues.length; j++) {
+                if (i != (int) attributeExampleValues[j]) {
+                    exs.delete(j);
                 }
             }
+            
+            //Make the subsequent branch of the tree
+            right.DecisionTree(exs.deleteAttributeAt(chosenAttribute.index()), examples);
         }
     }
 
@@ -56,6 +73,38 @@ public class TrainTree{
                     add a branch to tree with label (A = vk) and subtree subtree
     return tree
     */
+    private double PluralityValue(Instances examples){
+    	double maxProbability = 0, probability = 0;
+    	boolean tie = false;
+    	ArrayList<Integer> decisionIndexes = new ArrayList<Integer>();
+    	
+    	for(int i = 0; i < examples.attribute(examples.numAttributes()-1).numValues(); i++){
+    		probability = ProbabilityDecision(examples,i);
+    		
+    		if(maxProbability < probability){
+    			maxProbability = probability;
+    			decisionIndexes.clear();
+    			decisionIndexes.add(i);
+    			tie = false;
+    		} 
+    		else { 
+    			if(maxProbability == probability){
+    				decisionIndexes.add(i);
+    				tie = true;
+    			}
+    		}
+    		
+    	}
+    	
+    	if(tie){
+    		Random random = new Random();
+    		return random.nextInt(decisionIndexes.size() + 1);
+    	}
+    	else{
+    		return decisionIndexes.get(0);
+    	}
+    }
+    
     
     private static double log2(double val){
     	return Math.log(val)/Math.log(2);
@@ -115,17 +164,17 @@ public class TrainTree{
     
     private Attribute Importance(Instances examples){
     	double maxGain = 0, entropy = Entropy(examples);
-    	Attribute bestAttribute;
+    	int bestAttributeIndex = 0;
     	
-    	for(int i = 0; i < (int) examples.numAttributes(); i++){
+    	for(int i = 0; i < (int) examples.numAttributes() - 1; i++){
     		double gain = entropy -  Remainder(examples,examples.attribute(i));
     		if(maxGain < gain){
     			maxGain = gain;
-    			bestAttribute = examples.attribute(i);
+    			bestAttributeIndex = 1;
     		}
     	}
-    	
-    	return bestAttribute;
+    	 
+    	return examples.attribute(bestAttributeIndex);
     }
 
 
