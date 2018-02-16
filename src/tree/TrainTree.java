@@ -161,7 +161,6 @@ public class TrainTree{
     	return remainder;
     }
     
-    
     private Attribute Importance(Instances examples){
     	double maxGain = 0, entropy = Entropy(examples);
     	int bestAttributeIndex = 0;
@@ -170,7 +169,7 @@ public class TrainTree{
     		double gain = entropy -  Remainder(examples,examples.attribute(i));
     		if(maxGain < gain){
     			maxGain = gain;
-    			bestAttributeIndex = 1;
+    			bestAttributeIndex = i;
     		}
     	}
     	 
