@@ -134,7 +134,7 @@ public class DataProcessor {
 			if(lineParser.next().toLowerCase().equals("@attribute")){
 				attributeName = lineParser.next();
 								
-				lineParser.useDelimiter("\\s*[\\{\\},]+");
+				lineParser.useDelimiter("\\s*[\\{\\},]+\\s*");
 				while(lineParser.hasNext()){
 					attributeValues.add(lineParser.next());
 				}
