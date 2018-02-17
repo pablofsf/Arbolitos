@@ -66,6 +66,18 @@ public class DataProcessor {
 		return array;
 	}
 	
+	public int[] attributeToArray(Attribute attribute){
+		int index = this.attributes.indexOf(attribute);
+
+		int[] array = new int[numExamples()];
+		int i = 0;
+		
+		for(ArrayList<Integer> example: this.examples){
+			array[i++] = example.get(index);
+		}
+		
+		return array;
+	}
 	
 	private void getRelation(Scanner linesReader){
 		String line = linesReader.nextLine();
