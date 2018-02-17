@@ -152,7 +152,8 @@ public class TrainTree{
     		//This loop and variable could be placed into a function, together with the double[]
     		DataProcessor reducedExamples = new DataProcessor(examples);
 
-    		for(int j = 0; j < attributeExampleValues.length; j++){
+    		//Decreasing counter. As the array in dynamic, if it is increasing we screw it up
+    		for(int j = attributeExampleValues.length - 1; j >= 0; j--){
     			if((int) attributeExampleValues[j] != i){
     				reducedExamples.deleteExample(j);
     			}
