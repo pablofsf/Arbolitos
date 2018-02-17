@@ -1,23 +1,25 @@
 package tree;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
-
-import weka.core.Instances;
-import weka.core.Instance;
-import weka.core.Attribute;
+import data.*;
 
 
 public class TrainTree{
+	
+	public TrainTree(){
+		
+	}
 
-	//For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer/double
+	//For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer
 	//that represents that represents a value for the attribute we are looking for.
 	//In the example wait.arff, the attribute that we are looking for is @attribute wait {yes,no}
 	//Then, returning 0 means wait = yes and returning 1 means wait = no
 	//Both the number or the string could be stored in the tree node, still make a decision
-    Tree DecisionTree(Instances examples, Instances parent){
+    Tree DecisionTree(DataProcessor examples, DataProcessor parent){
 
-        if(examples.numInstances() == 0){
+        if(examples.numExamples() == 0){
         	//This has to be transformed into a end node
             return PluralityValue(parent);
         }
@@ -28,13 +30,13 @@ public class TrainTree{
             return PluralityValue(examples);
         }
 
-        double[] decisionValues = examples.attributeToDoubleArray(examples.numAttributes() - 1);
-        for(int i = 0; i < examples.numInstances() - 2 ;i++) {
+        int[] decisionValues = examples.attributeToArray(examples.numAttributes() - 1);
+        for(int i = 0; i < examples.numExamples() - 2 ;i++) {
             if (decisionValues[i] != decisionValues[i++]){
             	break;
             }
 
-            if (i == examples.numInstances()){
+            if (i == examples.numExamples()){
             	//This has to be transformed into a end node. The index is 0 but could be anything
                 return decisionValues[0];
             }
@@ -43,19 +45,19 @@ public class TrainTree{
         
         Attribute chosenAttribute = Importance(examples);
 
-        double[] attributeExampleValues = examples.attributeToDoubleArray(chosenAttribute.index());
+        int[] attributeExampleValues = examples.attributeToArray(chosenAttribute);
     	
         for (int i = 0; i < chosenAttribute.numValues(); i++) {
-            Instances exs = new Instances(examples);
+            DataProcessor exs = new DataProcessor(examples);
 
             for (int j = 0; i < attributeExampleValues.length; j++) {
                 if (i != (int) attributeExampleValues[j]) {
-                    exs.delete(j);
+                    exs.deleteExample(j);
                 }
             }
             
             //Make the subsequent branch of the tree
-            right.DecisionTree(exs.deleteAttributeAt(chosenAttribute.index()), examples);
+            right.DecisionTree(exs.deleteAttribute(chosenAttribute), examples);
         }
     }
 
@@ -73,12 +75,12 @@ public class TrainTree{
                     add a branch to tree with label (A = vk) and subtree subtree
     return tree
     */
-    private double PluralityValue(Instances examples){
+    private double PluralityValue(DataProcessor examples){
     	double maxProbability = 0, probability = 0;
     	boolean tie = false;
     	ArrayList<Integer> decisionIndexes = new ArrayList<Integer>();
     	
-    	for(int i = 0; i < examples.attribute(examples.numAttributes()-1).numValues(); i++){
+    	for(int i = 0; i < examples.getAttribute(examples.numAttributes()-1).numValues(); i++){
     		probability = ProbabilityDecision(examples,i);
     		
     		if(maxProbability < probability){
@@ -111,26 +113,27 @@ public class TrainTree{
     }
     
     //Taken a certain group of data, where several decisions can be made, check the probability of a certain one
-    private double ProbabilityDecision(Instances examples,int decision){
+    private double ProbabilityDecision(DataProcessor examples,int decision){
     	int decisionsTrue = 0;
     	
-    	double[] decisionsArray = examples.attributeToDoubleArray(examples.numAttributes()-1);
-    	for(int i = 0; i < examples.numInstances(); i++){
+    	int[] decisionsArray = examples.attributeToArray(examples.numAttributes()-1);
+    	for(int i = 0; i < examples.numExamples(); i++){
     		if(decision == (int) decisionsArray[i]){
     			decisionsTrue++;
     		}
     	}
     	
-    	return decisionsTrue/examples.numInstances();
+    	return ((double) decisionsTrue)/((double)examples.numExamples());
     }
     
     //Given a certain data, compute its entropy
-    private double Entropy(Instances examples){
+    private double Entropy(DataProcessor examples){
     	double entropy = 0;
     	double probability;
     	
-    	for(int i = 0; i < examples.attribute(examples.numAttributes()-1).numValues(); i++){
-    		if((probability = ProbabilityDecision(examples,i)) != 0)
+    	for(int i = 0; i < examples.getAttribute(examples.numAttributes()-1).numValues(); i++){
+    		probability = ProbabilityDecision(examples,i);
+    		if(probability != 0)
     			entropy -= probability*log2(probability);
     	}
     	
@@ -140,42 +143,48 @@ public class TrainTree{
     //Given a certain data, the remainder is calculated this way:
     //Split the data into sets according to the different values of the attribute you are given
     //For each set, calculate its probability and multiply per the entropy of that set. Add all of them
-    private double Remainder(Instances examples, Attribute attribute){
+    private double Remainder(DataProcessor examples, Attribute attribute){
     	double remainder = 0;
     	
-    	double[] attributeExampleValues = examples.attributeToDoubleArray(attribute.index());
+    	int[] attributeExampleValues = examples.attributeToArray(attribute);
     	for(int i = 0; i < (int) attribute.numValues(); i++){
         	
     		//This loop and variable could be placed into a function, together with the double[]
-    		Instances reducedExamples = new Instances(examples);
+    		DataProcessor reducedExamples = new DataProcessor(examples);
 
     		for(int j = 0; j < attributeExampleValues.length; j++){
     			if((int) attributeExampleValues[j] != i){
-    				reducedExamples.delete(j);
+    				reducedExamples.deleteExample(j);
     			}
     		}
     		
-    		remainder += (reducedExamples.numInstances()/examples.numInstances())*Entropy(reducedExamples);
+    		remainder += (reducedExamples.numExamples()/examples.numExamples())*Entropy(reducedExamples);
     	}
     	
     	return remainder;
     }
     
-    private Attribute Importance(Instances examples){
+    private Attribute Importance(DataProcessor examples){
     	double maxGain = 0, entropy = Entropy(examples);
     	int bestAttributeIndex = 0;
     	
     	for(int i = 0; i < (int) examples.numAttributes() - 1; i++){
-    		double gain = entropy -  Remainder(examples,examples.attribute(i));
+    		double gain = entropy -  Remainder(examples,examples.getAttribute(i));
     		if(maxGain < gain){
     			maxGain = gain;
     			bestAttributeIndex = i;
     		}
     	}
     	 
-    	return examples.attribute(bestAttributeIndex);
+    	return examples.getAttribute(bestAttributeIndex);
     }
 
-
+    public static void main(String args[]) throws FileNotFoundException{
+	
+    @SuppressWarnings("unused")
+	DataProcessor data = new DataProcessor("src/data/weather.nominal.arff");
+    TrainTree tree = new TrainTree();
+	tree.Importance(data);
+	}
 
 }
