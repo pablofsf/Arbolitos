@@ -24,6 +24,25 @@ public class DataProcessor {
 		 Parse(linesReader);
 	}
 	
+	//Copy Constructor
+	public DataProcessor(DataProcessor original){
+		this.name = original.getName();
+		this.attributes = original.getAttributes();
+		this.examples = original.getExamples();
+	}
+	
+	//Getter for copy constructor
+	public String getName() {
+		return name;
+	}
+	public ArrayList<Attribute> getAttributes() {
+		return attributes;
+	}
+	public ArrayList<ArrayList<Integer>> getExamples() {
+		return examples;
+	}
+
+	
 	public int numAttributes(){
 		return this.attributes.size();
 	}
