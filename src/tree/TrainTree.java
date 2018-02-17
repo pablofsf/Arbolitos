@@ -47,12 +47,13 @@ public class TrainTree{
 
         int[] attributeExampleValues = examples.attributeToArray(chosenAttribute);
     	
-        for (int i = 0; i < chosenAttribute.numValues(); i++) {
+        for (int attVal = 0; attVal < chosenAttribute.numValues(); attVal++) {
             DataProcessor exs = new DataProcessor(examples);
 
-            for (int j = 0; i < attributeExampleValues.length; j++) {
-                if (i != (int) attributeExampleValues[j]) {
-                    exs.deleteExample(j);
+    		//Decreasing counter. As the array in dynamic, if it is increasing we screw it up
+            for (int exValIndex = attributeExampleValues.length - 1; exValIndex >= 0; exValIndex--) {
+                if (attVal !=  attributeExampleValues[exValIndex]) {
+                    exs.deleteExample(exValIndex);
                 }
             }
             
@@ -118,7 +119,7 @@ public class TrainTree{
     	
     	int[] decisionsArray = examples.attributeToArray(examples.numAttributes()-1);
     	for(int i = 0; i < examples.numExamples(); i++){
-    		if(decision == (int) decisionsArray[i]){
+    		if(decision ==  decisionsArray[i]){
     			decisionsTrue++;
     		}
     	}
@@ -147,7 +148,7 @@ public class TrainTree{
     	double remainder = 0;
     	
     	int[] attributeExampleValues = examples.attributeToArray(attribute);
-    	for(int attVal = 0; attVal < (int) attribute.numValues(); attVal++){
+    	for(int attVal = 0; attVal <  attribute.numValues(); attVal++){
         	
     		DataProcessor reducedExamples = new DataProcessor(examples);
 
@@ -158,7 +159,7 @@ public class TrainTree{
     			}
     		}
     		
-    		remainder += (reducedExamples.numExamples()/examples.numExamples())*Entropy(reducedExamples);
+    		remainder += ((double)reducedExamples.numExamples())/((double)examples.numExamples())*Entropy(reducedExamples);
     	}
     	
     	return remainder;
@@ -168,7 +169,7 @@ public class TrainTree{
     	double maxGain = 0, entropy = Entropy(examples);
     	int bestAttributeIndex = 0;
     	
-    	for(int i = 0; i < (int) examples.numAttributes() - 1; i++){
+    	for(int i = 0; i < examples.numAttributes() - 1; i++){
     		double gain = entropy -  Remainder(examples,examples.getAttribute(i));
     		if(maxGain < gain){
     			maxGain = gain;
