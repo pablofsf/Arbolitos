@@ -19,7 +19,7 @@ public class TrainTree {
     }
 
     public void train(DataProcessor examples, DataProcessor parent) {
-        root = DecisionTree(examples, parents);
+        root = DecisionTree(examples, parents, NULL);
     }
     //For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer
     //that represents that represents a value for the attribute we are looking for.
@@ -30,13 +30,13 @@ public class TrainTree {
 
         if (examples.numExamples() == 0) {
             //This has to be transformed into a end node
-            return Node.newLeafNode(PluralityValue(parent));
+            return root.addChild(.newLeafNode(PluralityValue(parent)));
         }
 
         //If there is only 1 attribute, the it is the decision attribute. Makes no sense to do anything else
         if (examples.numAttributes() == 1) {
             //This has to be transformed into a end node
-            return Node.newLeafNode(PluralityValue(examples));
+            return root.addChild(Node.newLeafNode(PluralityValue(examples)));
         }
 
         int[] decisionValues = examples.attributeToArray(examples.numAttributes() - 1);
