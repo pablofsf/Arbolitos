@@ -13,10 +13,14 @@ public class TrainTree {
 
     public Node root;
 
+
     public TrainTree() {
 
     }
 
+    public void train(DataProcessor examples, DataProcessor parent) {
+        root = DecisionTree(examples, parents);
+    }
     //For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer
     //that represents that represents a value for the attribute we are looking for.
     //In the example wait.arff, the attribute that we are looking for is @attribute wait {yes,no}
