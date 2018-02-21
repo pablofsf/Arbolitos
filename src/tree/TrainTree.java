@@ -1,4 +1,4 @@
-package Arbolitos2.src.tree;
+package tree;
 
 
 import java.io.FileNotFoundException;
@@ -52,7 +52,7 @@ public class TrainTree {
         Attribute chosenAttribute = Importance(examples);
 
         int[] attributeExampleValues = examples.attributeToArray(chosenAttribute);
-        Node node;
+        Node node = null;
         for (int attVal = 0; attVal < chosenAttribute.numValues(); attVal++) {
             DataProcessor exs = new DataProcessor(examples);
 

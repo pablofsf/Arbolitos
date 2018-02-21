@@ -1,6 +1,8 @@
-package src.tree;
+package tree;
 
-*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /*
 public class Tree {
@@ -81,7 +83,7 @@ public class Tree<DataProcessor> {
     private Node<DataProcessor> root;
 
     public Tree(DataProcessor rootData) {
-        root = new Node<Data Processor > ();
+        root = new Node<DataProcessor > ();
         root.data = rootData;
         root.children = new ArrayList<Node<DataProcessor>>();
     }

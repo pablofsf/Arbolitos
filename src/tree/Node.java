@@ -1,4 +1,4 @@
-package Arbolitos2.src.tree;
+package tree;
 import data.DataProcessor;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class Node {
     public ArrayList<Node> children = new ArrayList<Node>();
 
     public Node(DataProcessor atributte, double value) {
-        this.attribute = attribute;
+        this.attribute = atributte;
         this.value = value;
 
     }
