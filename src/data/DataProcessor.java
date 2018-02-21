@@ -209,19 +209,12 @@ public class DataProcessor {
     private void Parse(Scanner linesReader) {
         String line;
 
-        //Get relation
         getRelation(linesReader);
 
-        //Get attributes
         line = getAttributes(linesReader);
 
-        //Get data
         getData(line, linesReader);
 
     }
 
-	/*public static void main(String args[]) throws FileNotFoundException{
-        @SuppressWarnings("unused")
-		DataProcessor data = new DataProcessor("src/data/wait.arff");
-	}*/
 }
