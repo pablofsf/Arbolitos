@@ -1,29 +1,42 @@
-package src*;
+package Arbolitos2.src.tree;
+import data.DataProcessor;
+
+import java.util.ArrayList;
+
 
 public class Node {
 
-    private int value;
-    private Atribute x;
+    private double value;
+    private DataProcessor attribute;
 
     private Node father;
-    private Node left;
-    private Node right;
+    public ArrayList<Node> children = new ArrayList<Node>();
 
-    public Node(int value, Atribute x) {
+    public Node(DataProcessor atributte, double value) {
+        this.attribute = attribute;
         this.value = value;
-        this.x = x;
+
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-    public void setX(Atribute x){this.x = x;}
-
-    public int getValue() {
-        return value;
+    public Node(DataProcessor attribute) {
+        this.attribute = attribute;
     }
 
-    public void getX(Atribute x){return x;}
+    public static Node newNode(DataProcessor atribute) {
+        return new Node(atribute);
+    }
+
+    public ArrayList<Node> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<Node> children) {
+        this.children = children;
+    }
+
+    public void addChild(Node child) {
+        children.add(child);
+    }
 
     public Node getFather() {
         return father;
@@ -33,20 +46,21 @@ public class Node {
         this.father = father;
     }
 
-    public Node getLeft() {
-        return left;
+    public static Node newLeafNode(double value) {
+        return new Node(null, value);
     }
 
-    public void setLeft(Node left) {
-        this.left = left;
+    public void setValue(int value) {
+        this.value = value;
     }
 
-    public Node getRight() {
-        return right;
+    public void getAtribute(DataProcessor atribute) {
+        this.attribute = atribute;
     }
 
-    public void setRight(Node right) {
-        this.right = right;
+    public double getValue() {
+        return value;
     }
+
 
 }
