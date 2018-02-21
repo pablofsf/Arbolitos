@@ -1,29 +1,29 @@
 package tree;
-import data.DataProcessor;
-
+import data.Attribute;
 import java.util.ArrayList;
 
 
 public class Node {
 
     private double value;
-    private DataProcessor attribute;
+    private Attribute attribute;
 
     private Node father;
     public ArrayList<Node> children = new ArrayList<Node>();
 
-    public Node(DataProcessor atributte, double value) {
-        this.attribute = atributte;
+
+    public Node(Attribute attribute, double value) {
+        this.attribute = attribute;
         this.value = value;
 
     }
 
-    public Node(DataProcessor attribute) {
+    public Node(Attribute attribute) {
         this.attribute = attribute;
     }
 
-    public static Node newNode(DataProcessor atribute) {
-        return new Node(atribute);
+    public static Node newNode(Attribute attribute) {
+        return new Node(attribute);
     }
 
     public ArrayList<Node> getChildren() {
@@ -54,8 +54,8 @@ public class Node {
         this.value = value;
     }
 
-    public void getAtribute(DataProcessor atribute) {
-        this.attribute = atribute;
+    public Attribute getAtribute(Attribute attribute) {
+        return this.attribute;
     }
 
     public double getValue() {

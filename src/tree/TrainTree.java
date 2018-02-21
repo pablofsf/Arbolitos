@@ -19,7 +19,7 @@ public class TrainTree {
     }
 
     public void train(DataProcessor examples, DataProcessor parent) {
-        root = DecisionTree(examples, parents);
+        root = DecisionTree(examples, parent, null);
     }
     //For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer
     //that represents that represents a value for the attribute we are looking for.
@@ -30,13 +30,13 @@ public class TrainTree {
 
         if (examples.numExamples() == 0) {
             //This has to be transformed into a end node
-            Node.newLeafNode(PluralityValue(parent));
+            return Node.newLeafNode(PluralityValue(parent));
         }
 
         //If there is only 1 attribute, the it is the decision attribute. Makes no sense to do anything else
         if (examples.numAttributes() == 1) {
             //This has to be transformed into a end node
-            Node.newLeafNode(PluralityValue(examples));
+            return Node.newLeafNode(PluralityValue(examples));
         }
 
         int[] decisionValues = examples.attributeToArray(examples.numAttributes() - 1);
@@ -48,7 +48,7 @@ public class TrainTree {
             if (i == examples.numExamples()) {
                 //This has to be transformed into a end node. The index is 0 but could be anything
                 //return decisionValues[0];
-                Node.newLeafNode(decisionValues[i]);
+                return Node.newLeafNode(decisionValues[i]);
             }
         }
 
@@ -66,7 +66,7 @@ public class TrainTree {
                     exs.deleteExample(exValIndex);
                 }
             }
-            node = Node.newNode(exs);
+            node = new Node(chosenAttribute);
             node.addChild(DecisionTree(exs.deleteAttribute(chosenAttribute), examples, node));
             //Make the subsequent branch of the tree
 
@@ -190,12 +190,11 @@ public class TrainTree {
         return examples.getAttribute(bestAttributeIndex);
     }
 
-    public static void main(String args[]) throws FileNotFoundException {
+    @SuppressWarnings("unused")
+	public static void main(String args[]) throws FileNotFoundException {
 
-        @SuppressWarnings("unused")
         DataProcessor data = new DataProcessor("src/data/weather.nominal.arff");
         TrainTree tree = new TrainTree();
-        tree.Importance(data);
     }
 
 }
