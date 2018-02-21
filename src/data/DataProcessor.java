@@ -27,7 +27,11 @@ public class DataProcessor {
     public DataProcessor(DataProcessor original) {
         this.name = new String(original.getName());
         this.attributes = new ArrayList<Attribute>(original.getAttributes());
-        this.examples = new ArrayList<ArrayList<Integer>>(original.getExamples());
+        this.examples = new ArrayList<ArrayList<Integer>>(0);
+
+        for(ArrayList<Integer> exLine: original.getExamples()){
+        	this.examples.add(new ArrayList<Integer>(exLine));
+        }
     }
 
     //Getter for copy constructor
