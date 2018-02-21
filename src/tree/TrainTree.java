@@ -30,13 +30,13 @@ public class TrainTree {
 
         if (examples.numExamples() == 0) {
             //This has to be transformed into a end node
-            Node.newLeafNode(PluralityValue(parent));
+            return Node.newLeafNode(PluralityValue(parent));
         }
 
         //If there is only 1 attribute, the it is the decision attribute. Makes no sense to do anything else
         if (examples.numAttributes() == 1) {
             //This has to be transformed into a end node
-            Node.newLeafNode(PluralityValue(examples));
+            return Node.newLeafNode(PluralityValue(examples));
         }
 
         int[] decisionValues = examples.attributeToArray(examples.numAttributes() - 1);

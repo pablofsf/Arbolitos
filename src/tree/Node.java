@@ -1,28 +1,28 @@
 package Arbolitos2.src.tree;
 import data.DataProcessor;
-
+import data.Attribute;
 import java.util.ArrayList;
 
 
 public class Node {
 
     private double value;
-    private DataProcessor attribute;
+    private Attribute attribute;
 
     private Node father;
     public ArrayList<Node> children = new ArrayList<Node>();
 
-    public Node(DataProcessor atributte, double value) {
+    public Node(Attribute atributte, double value) {
         this.attribute = attribute;
         this.value = value;
 
     }
 
-    public Node(DataProcessor attribute) {
+    public Node(Attribute attribute) {
         this.attribute = attribute;
     }
 
-    public static Node newNode(DataProcessor atribute) {
+    public static Node newNode(Attribute atribute) {
         return new Node(atribute);
     }
 
@@ -54,7 +54,7 @@ public class Node {
         this.value = value;
     }
 
-    public void getAtribute(DataProcessor atribute) {
+    public void getAtribute(Attribute atribute) {
         this.attribute = atribute;
     }
 
