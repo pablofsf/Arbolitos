@@ -56,20 +56,22 @@ public class DataProcessor {
         return this.attributes.get(index);
     }
 
-    public void deleteAttribute(int index) {
+    public DataProcessor deleteAttribute(int index) {
         this.attributes.remove(index);
         for (ArrayList<Integer> example : this.examples) {
             example.remove(index);
         }
+        return this;
     }
 
-    public void deleteAttribute(Attribute attribute) {
+    public DataProcessor deleteAttribute(Attribute attribute) {
         int index = this.attributes.indexOf(attribute);
 
         this.attributes.remove(attribute);
         for (ArrayList<Integer> example : this.examples) {
             example.remove(index);
         }
+        return this;
     }
 
     public void deleteExample(int index) {
