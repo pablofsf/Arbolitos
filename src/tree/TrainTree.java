@@ -21,21 +21,14 @@ public class TrainTree {
     public void train(DataProcessor examples, DataProcessor parent) {
         root = DecisionTree(examples, parent, null);
     }
-    //For the 3 comments that say "//This has to be transformed into a end node", the result returned is an integer
-    //that represents that represents a value for the attribute we are looking for.
-    //In the example wait.arff, the attribute that we are looking for is @attribute wait {yes,no}
-    //Then, returning 0 means wait = yes and returning 1 means wait = no
-    //Both the number or the string could be stored in the tree node, still make a decision
+    
     public Node DecisionTree(DataProcessor examples, DataProcessor parent, Node root) {
 
         if (examples.numExamples() == 0) {
-            //This has to be transformed into a end node
             return Node.newLeafNode(PluralityValue(parent));
         }
 
-        //If there is only 1 attribute, the it is the decision attribute. Makes no sense to do anything else
         if (examples.numAttributes() == 1) {
-            //This has to be transformed into a end node
             return Node.newLeafNode(PluralityValue(examples));
         }
 
@@ -46,9 +39,7 @@ public class TrainTree {
             }
 
             if (i == examples.numExamples()) {
-                //This has to be transformed into a end node. The index is 0 but could be anything
-                //return decisionValues[0];
-                return Node.newLeafNode(decisionValues[i]);
+                return Node.newLeafNode(decisionValues[i-1]);
             }
         }
 
@@ -68,7 +59,6 @@ public class TrainTree {
             }
             node = new Node(chosenAttribute);
             node.addChild(DecisionTree(exs.deleteAttribute(chosenAttribute), examples, node));
-            //Make the subsequent branch of the tree
 
         }
         return node;
