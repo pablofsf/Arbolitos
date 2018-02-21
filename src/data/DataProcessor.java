@@ -140,10 +140,10 @@ public class DataProcessor {
             ArrayList<String> attributeValues = new ArrayList<String>(0);
 
             if (lineParser.next().toLowerCase().equals("@attribute")) {
-                attributeName = lineParser.next();
-
-                lineParser.useDelimiter("\\s*[\\{\\},]+\\s*");
-                while (lineParser.hasNext()) {
+            	attributeName = lineParser.findInLine("[^\"'\\s]+|(\"'(.*?)[\"']+)");
+            	
+            	 lineParser.useDelimiter("\\s*[\"']*\\s*[\\{\\},]+?\\s*[\"']*"); 
+            	 while (lineParser.hasNext()) {
                     attributeValues.add(lineParser.next());
                 }
 
@@ -180,7 +180,7 @@ public class DataProcessor {
             ArrayList<Integer> exampleLine = new ArrayList<Integer>(numAttributes());
             Iterator<Attribute> attributesIt = this.attributes.iterator();
             lineParser = new Scanner(line);
-            lineParser.useDelimiter("[\\s,]+");
+            lineParser.useDelimiter("\\s*[\"']*\\s*[,'\"]+?\\s*[\"']*");
 
             String exampleValue;
 
@@ -189,7 +189,11 @@ public class DataProcessor {
                 exampleValue = lineParser.next();
                 ArrayList<String> attributeValues = attributesIt.next().getValues();
 
-                for (int j = 0; j < attributeValues.size(); j++) {
+                for(int j = 0; j <= attributeValues.size() ; j++){
+                	if(j == attributeValues.size()){
+                		exampleLine.add(-1);
+                		break;
+                	}
                     if (attributeValues.get(j).equals(exampleValue)) {
                         exampleLine.add(j);
                         break;
