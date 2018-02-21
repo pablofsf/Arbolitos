@@ -33,13 +33,13 @@ public class TrainTree {
         }
 
         int[] decisionValues = examples.attributeToArray(examples.numAttributes() - 1);
-        for (int i = 0; i < examples.numExamples() - 2; i++) {
-            if (decisionValues[i] != decisionValues[i++]) {
+        for (int i = 0; i < examples.numExamples() - 1;i++) {
+            if (decisionValues[i] != decisionValues[i+1]) {
                 break;
             }
 
-            if (i == examples.numExamples()) {
-                return Node.newLeafNode(decisionValues[i-1]);
+            if (i == examples.numExamples() - 2) {
+                return Node.newLeafNode(decisionValues[i]);
             }
         }
 
@@ -47,7 +47,7 @@ public class TrainTree {
         Attribute chosenAttribute = Importance(examples);
 
         int[] attributeExampleValues = examples.attributeToArray(chosenAttribute);
-        Node node = null;
+        Node node = new Node(chosenAttribute);
         for (int attVal = 0; attVal < chosenAttribute.numValues(); attVal++) {
             DataProcessor exs = new DataProcessor(examples);
 
@@ -57,8 +57,8 @@ public class TrainTree {
                     exs.deleteExample(exValIndex);
                 }
             }
-            node = new Node(chosenAttribute);
-            node.addChild(DecisionTree(exs.deleteAttribute(chosenAttribute), examples, node));
+            exs.deleteAttribute(chosenAttribute);
+            node.addChild(DecisionTree(exs, examples, node));
 
         }
         return node;
@@ -180,11 +180,38 @@ public class TrainTree {
         return examples.getAttribute(bestAttributeIndex);
     }
 
-    @SuppressWarnings("unused")
+    public void print(){
+    	printTree(this.root,0);
+    }
+    
+    private void printTree(Node tree, int depth){
+		Attribute attribute = tree.getAtribute();
+		
+		if(attribute == null){
+			System.out.print(": " + tree.getValue());
+		}
+		else{
+			System.out.print("\n");
+			for(int i = 0; i < depth; i++){
+				System.out.print("  ");
+			}
+		}
+		
+		ArrayList<String> attributeValues = attribute.getValues();
+		ArrayList<Node> children = tree.getChildren();
+		
+		for(int i = 0; i < attribute.numValues(); i++){
+			System.out.print(attribute.getName() + " = " + attributeValues.get(i));
+			printTree(children.get(i),depth + 1);
+		}
+	}
+
 	public static void main(String args[]) throws FileNotFoundException {
 
         DataProcessor data = new DataProcessor("src/data/weather.nominal.arff");
         TrainTree tree = new TrainTree();
+        tree.train(data,data);
+        tree.print();
     }
 
 }
