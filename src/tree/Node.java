@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 public class Node {
 
-    private double value;
+    private String value;
     private Attribute attribute;
 
     private Node father;
     public ArrayList<Node> children = new ArrayList<Node>();
 
 
-    public Node(Attribute attribute, double value) {
+    public Node(Attribute attribute, String value) {
         this.attribute = attribute;
         this.value = value;
 
@@ -46,11 +46,11 @@ public class Node {
         this.father = father;
     }
 
-    public static Node newLeafNode(double value) {
+    public static Node newLeafNode(String value) {
         return new Node(null, value);
     }
 
-    public void setValue(int value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -58,7 +58,7 @@ public class Node {
         return this.attribute;
     }
 
-    public double getValue() {
+    public String getValue() {
         return value;
     }
 

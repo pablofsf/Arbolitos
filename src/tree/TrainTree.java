@@ -23,18 +23,19 @@ public class TrainTree {
     }
     
     public Node DecisionTree(DataProcessor examples, DataProcessor parent, Node root) {
-
+    	int numAttributes = examples.numAttributes();
+    	
         if (examples.numExamples() == 0) {
-            return Node.newLeafNode(PluralityValue(parent));
+            return Node.newLeafNode(examples.getAttribute(numAttributes-1).getValues().get(PluralityValue(parent)));
         }
         else {
         	if(examples.numExamples() == 1){
-        		return Node.newLeafNode(examples.attributeToArray(examples.numAttributes() - 1)[0]);
+        		return Node.newLeafNode(examples.getAttribute(numAttributes-1).getValues().get(examples.attributeToArray(numAttributes - 1)[0]));
         	}
         }
 
         if (examples.numAttributes() == 1) {
-            return Node.newLeafNode(PluralityValue(examples));
+            return Node.newLeafNode(examples.getAttribute(numAttributes-1).getValues().get(PluralityValue(examples)));
         }
 
         int[] decisionValues = examples.attributeToArray(examples.numAttributes() - 1);
@@ -44,7 +45,7 @@ public class TrainTree {
             }
 
             if (i == examples.numExamples() - 2) {
-                return Node.newLeafNode(decisionValues[i]);
+                return Node.newLeafNode(examples.getAttribute(numAttributes-1).getValues().get(decisionValues[i]));
             }
         }
 
@@ -83,7 +84,7 @@ public class TrainTree {
                     add a branch to tree with label (A = vk) and subtree subtree
     return tree
     */
-    private double PluralityValue(DataProcessor examples) {
+    private int PluralityValue(DataProcessor examples) {
         double maxProbability = 0, probability = 0;
         boolean tie = false;
         ArrayList<Integer> decisionIndexes = new ArrayList<Integer>();
@@ -107,9 +108,9 @@ public class TrainTree {
 
         if (tie) {
             Random random = new Random();
-            return random.nextInt(decisionIndexes.size());
+            return (int) random.nextInt(decisionIndexes.size());
         } else {
-            return decisionIndexes.get(0);
+            return (int) decisionIndexes.get(0);
         }
     }
 
