@@ -18,8 +18,8 @@ public class TrainTree {
 
     }
 
-    public void train(DataProcessor examples, DataProcessor parent) {
-        root = DecisionTree(examples, parent, null);
+    public Node train(DataProcessor examples, DataProcessor parent) {
+        return root = DecisionTree(examples, parent, null);
     }
     
     public Node DecisionTree(DataProcessor examples, DataProcessor parent, Node root) {
