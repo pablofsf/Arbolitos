@@ -219,8 +219,14 @@ public class TrainTree {
 	}
 
 	public static void main(String args[]) throws FileNotFoundException {
-
-        DataProcessor data = new DataProcessor("src/data/wait.arff");
+		String path;
+		if(args.length < 1){
+			path = "data/wait.arff";
+		}
+		else 
+			path = args[0];
+		
+        DataProcessor data = new DataProcessor(path);
         TrainTree tree = new TrainTree();
         tree.train(data,data);
         tree.print();
