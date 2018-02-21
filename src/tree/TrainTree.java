@@ -27,6 +27,11 @@ public class TrainTree {
         if (examples.numExamples() == 0) {
             return Node.newLeafNode(PluralityValue(parent));
         }
+        else {
+        	if(examples.numExamples() == 1){
+        		return Node.newLeafNode(examples.attributeToArray(examples.numAttributes() - 1)[0]);
+        	}
+        }
 
         if (examples.numAttributes() == 1) {
             return Node.newLeafNode(PluralityValue(examples));
@@ -102,7 +107,7 @@ public class TrainTree {
 
         if (tie) {
             Random random = new Random();
-            return random.nextInt(decisionIndexes.size() + 1);
+            return random.nextInt(decisionIndexes.size());
         } else {
             return decisionIndexes.get(0);
         }
@@ -124,7 +129,10 @@ public class TrainTree {
             }
         }
 
-        return ((double) decisionsTrue) / ((double) examples.numExamples());
+        if(examples.numExamples() == 0)
+        	return 0;
+        else
+        	return ((double) decisionsTrue) / ((double) examples.numExamples());
     }
 
     //Given a certain data, compute its entropy
@@ -158,8 +166,8 @@ public class TrainTree {
                     reducedExamples.deleteExample(exValIndex);
                 }
             }
-
-            remainder += ((double) reducedExamples.numExamples()) / ((double) examples.numExamples()) * Entropy(reducedExamples);
+            if(examples.numExamples() != 0)
+            	remainder += ((double) reducedExamples.numExamples()) / ((double) examples.numExamples()) * Entropy(reducedExamples);
         }
 
         return remainder;
@@ -188,12 +196,12 @@ public class TrainTree {
 		Attribute attribute = tree.getAtribute();
 		
 		if(attribute == null){
-			System.out.print(": " + tree.getValue());
+			System.out.print(": " + tree.getValue() + "\n");
+			return;
 		}
 		else{
-			System.out.print("\n");
-			for(int i = 0; i < depth; i++){
-				System.out.print("  ");
+			if(depth != 0){
+				System.out.print("\n");
 			}
 		}
 		
@@ -201,6 +209,9 @@ public class TrainTree {
 		ArrayList<Node> children = tree.getChildren();
 		
 		for(int i = 0; i < attribute.numValues(); i++){
+			for(int j = 0; j < depth; j++){
+				System.out.print("  ");
+			}
 			System.out.print(attribute.getName() + " = " + attributeValues.get(i));
 			printTree(children.get(i),depth + 1);
 		}
@@ -208,7 +219,7 @@ public class TrainTree {
 
 	public static void main(String args[]) throws FileNotFoundException {
 
-        DataProcessor data = new DataProcessor("src/data/weather.nominal.arff");
+        DataProcessor data = new DataProcessor("src/data/wait.arff");
         TrainTree tree = new TrainTree();
         tree.train(data,data);
         tree.print();
