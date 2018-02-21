@@ -54,7 +54,7 @@ public class Node {
         this.value = value;
     }
 
-    public Attribute getAtribute(Attribute attribute) {
+    public Attribute getAtribute() {
         return this.attribute;
     }
 
