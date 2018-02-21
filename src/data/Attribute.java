@@ -28,4 +28,8 @@ public class Attribute {
     public ArrayList<String> getValues() {
         return new ArrayList<String>(values);
     }
+    
+    public String getName(){
+    	return name;
+    }
 }
