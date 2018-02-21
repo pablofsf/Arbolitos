@@ -58,7 +58,7 @@ public class TrainTree{
             }
             
             //Make the subsequent branch of the tree
-            right.DecisionTree(exs.deleteAttribute(chosenAttribute), examples);
+            addNode.DecisionTree(exs.deleteAttribute(chosenAttribute), examples);
         }
     }
 
